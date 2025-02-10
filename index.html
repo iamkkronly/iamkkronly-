@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TapCoin Wallet</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            font-size: 28px;
+        }
+        .wallet {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            display: inline-block;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .tap-btn {
+            font-size: 22px;
+            padding: 15px 40px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0px 5px 15px rgba(0, 114, 255, 0.4);
+        }
+        .tap-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            box-shadow: 0px 7px 20px rgba(0, 114, 255, 0.6);
+        }
+        .withdraw-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .withdraw-section input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #0072ff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .withdraw-btn {
+            font-size: 18px;
+            padding: 10px 25px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .withdraw-btn:hover {
+            background: #218838;
+        }
+        .timer {
+            font-size: 20px;
+            color: red;
+            font-weight: bold;
+            display: none;
+            margin-top: 10px;
+        }
+        .check-payment {
+            font-size: 18px;
+            color: green;
+            font-weight: bold;
+            display: none;
+            margin-top: 10px;
+        }
+        .reviews {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .review-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            margin: 10px auto;
+            width: 80%;
+            display: flex;
+            align-items: center;
+        }
+        .review-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .review-text {
+            text-align: left;
+        }
+        .stars {
+            color: gold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>💰 TapCoin Wallet 💰</h1>
+    <div class="wallet">Balance: ₹<span id="balance">0</span></div>
+    <br>
+    <button class="tap-btn" onclick="increaseBalance()">💸 Tap to Earn ₹1</button>
+
+    <!-- Withdrawal Section -->
+    <div class="withdraw-section" id="withdraw-section">
+        <h2>Withdraw Money</h2>
+        <p>Enter your UPI ID:</p>
+        <input type="text" id="upi-id" placeholder="example@upi">
+        <br>
+        <button class="withdraw-btn" onclick="withdrawMoney()">Withdraw</button>
+        <p class="timer" id="timer">Processing: 10s</p>
+        <p class="check-payment" id="check-payment">✅ Check for Payment</p>
+    </div>
+
+    <!-- User Reviews Section -->
+    <div class="reviews">
+        <h2>🌟 User Reviews 🌟</h2>
+        <div class="review-box">
+            <img src="https://i.pravatar.cc/50?img=1" alt="User">
+            <div class="review-text">
+                <strong>Rahul Sharma</strong>
+                <p class="stars">⭐⭐⭐⭐⭐</p>
+                <p>Super easy to earn money! Love this app. 🔥</p>
+            </div>
+        </div>
+        <div class="review-box">
+            <img src="https://i.pravatar.cc/50?img=2" alt="User">
+            <div class="review-text">
+                <strong>Pooja Verma</strong>
+                <p class="stars">⭐⭐⭐⭐</p>
+                <p>Great experience! Withdrawal was smooth. 😊</p>
+            </div>
+        </div>
+        <div class="review-box">
+            <img src="https://i.pravatar.cc/50?img=3" alt="User">
+            <div class="review-text">
+                <strong>Amit Gupta</strong>
+                <p class="stars">⭐⭐⭐⭐</p>
+                <p>Simple and effective, works perfectly. 🚀</p>
+            </div>
+        </div>
+        <div class="review-box">
+            <img src="https://i.pravatar.cc/50?img=4" alt="User">
+            <div class="review-text">
+                <strong>Neha Singh</strong>
+                <p class="stars">⭐⭐⭐⭐⭐</p>
+                <p>Nice design and easy to use. Love it! ❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let balance = localStorage.getItem("walletBalance") ? parseInt(localStorage.getItem("walletBalance")) : 0;
+        document.getElementById("balance").textContent = balance;
+
+        function checkWithdrawal() {
+            document.getElementById("withdraw-section").style.display = balance >= 2000 ? "block" : "none";
+        }
+        checkWithdrawal();
+
+        function increaseBalance() {
+            balance += 1;
+            document.getElementById("balance").textContent = balance;
+            localStorage.setItem("walletBalance", balance);
+            checkWithdrawal();
+        }
+
+        function withdrawMoney() {
+            let upiId = document.getElementById("upi-id").value.trim();
+            if (!upiId) return alert("Please enter a valid UPI ID.");
+
+            let timer = document.getElementById("timer");
+            let checkPayment = document.getElementById("check-payment");
+            timer.style.display = "block";
+            checkPayment.style.display = "none";
+            let countdown = 10;
+            timer.innerHTML = "Processing: " + countdown + "s";
+            let interval = setInterval(() => {
+                countdown--;
+                timer.innerHTML = "Processing: " + countdown + "s";
+                if (countdown === 0) {
+                    clearInterval(interval);
+                    timer.style.display = "none";
+                    checkPayment.style.display = "block";
+                }
+            }, 1000);
+
+            balance = 0;
+            document.getElementById("balance").textContent = balance;
+            localStorage.setItem("walletBalance", balance);
+            checkWithdrawal();
+        }
+    </script>
+
+</body>
+</html>
